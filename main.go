@@ -22,7 +22,7 @@ const (
 
 var (
 	flagHidden     = flag.String("h", "HTML_STRIP", "hidden comment name")
-	flagStrip      = flag.String("s", `script,noscript,link[rel="blah"]`, "elements to strip")
+	flagStrip      = flag.String("s", `script,noscript,link[rel="preload"][as="style"]`, "elements to strip")
 	flagIgnoreTags = flag.String("i", `{%,%}`, "special tags to ignore")
 )
 
