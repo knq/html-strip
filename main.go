@@ -21,9 +21,10 @@ const (
 )
 
 var (
-	flagHidden     = flag.String("h", "HTML_STRIP", "hidden comment name")
-	flagStrip      = flag.String("s", `script,noscript,link[rel="preload"][as="style"]`, "elements to strip")
-	flagIgnoreTags = flag.String("i", `{%,%}`, "special tags to ignore")
+	flagHidden           = flag.String("h", "HTML_STRIP", "hidden comment name")
+	flagStrip            = flag.String("s", `script,noscript,link[rel="preload"][as="style"]`, "elements to strip")
+	flagIgnoreTags       = flag.String("i", `{%,%}`, "special tags to ignore")
+	flagIgnoreTagNewline = flag.Bool("n", true, "eat ignore tag newlines")
 )
 
 func main() {
@@ -62,7 +63,11 @@ func main() {
 		}
 
 		prefix := fmt.Sprintf(tagPrefix, *flagHidden, i/2)
-		re := regexp.MustCompile(regexp.QuoteMeta(st) + `[^` + regexp.QuoteMeta(et[:1]) + `]+` + regexp.QuoteMeta(et))
+		extra := ""
+		if *flagIgnoreTagNewline {
+			extra = "\n?"
+		}
+		re := regexp.MustCompile(extra + regexp.QuoteMeta(st) + `[^` + regexp.QuoteMeta(et[:1]) + `]+` + regexp.QuoteMeta(et) + extra)
 		buf = re.ReplaceAllFunc(buf, func(s []byte) []byte {
 			sb := new(bytes.Buffer)
 			sb.WriteString(prefix)
